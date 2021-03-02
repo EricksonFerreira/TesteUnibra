@@ -12,6 +12,7 @@ use App\Contracts\Helpers\RocketShipContract;
 
 class ArtigoController extends Controller
 {
+    
     protected $user;
     protected $artigoSave;
 
