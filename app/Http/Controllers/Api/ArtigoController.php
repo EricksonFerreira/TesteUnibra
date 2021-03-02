@@ -3,19 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use app\Http\Interfaces\IArtigoSave;
 use Illuminate\Http\Request;
 use App\Models\Artigo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Contracts\Helpers\RocketShipContract;
 
 class ArtigoController extends Controller
 {
     protected $user;
+    protected $artigoSave;
 
-    public function __construct()
+    public function __construct(IArtigoSave $artigoSave)
     {
         $this->middleware('auth:api');
         $this->user = $this->guard()->user();
+        $this->artigoSave = $artigoSave;
     }
 
     public function index()
@@ -40,26 +44,7 @@ class ArtigoController extends Controller
         }
 
         $artigo            = new Artigo();
-        $artigo->nome     = $request->nome;
-        $artigo->descricao      = $request->descricao;
-        $artigo->concluido = $request->concluido;
-
-        if($this->user->artigos()->save($artigo))
-        {
-            return response()->json(
-                [
-                    'status' => true,
-                    'artigo'   => $artigo,
-                ]
-            );
-        }else{
-            return response()->json(
-                [
-                    'status' => false,
-                    'artigo'   => 'Oops, não consegui salvar!',
-                ]
-            );
-        }
+        $this->artigoSave->save($request, $artigo);
 
     }// end store()
 
@@ -89,22 +74,22 @@ class ArtigoController extends Controller
         $artigo->descricao      = $request->descricao;
         $artigo->concluido = $request->concluido;
 
-        if($this->user->artigos()->save($artigo))
-        {
-            return response()->json(
-                [
-                    'status' => true,
-                    'artigo'   => $artigo,
-                ]
-            );
-        }else{
-            return response()->json(
-                [
-                    'status' => false,
-                    'artigo'   => 'Oops, não consegui atualizar!',
-                ]
-            );
-        }
+        // if($this->user->artigos()->save($artigo))
+        // {
+        //     return response()->json(
+        //         [
+        //             'status' => true,
+        //             'artigo'   => $artigo,
+        //         ]
+        //     );
+        // }else{
+        //     return response()->json(
+        //         [
+        //             'status' => false,
+        //             'artigo'   => 'Oops, não consegui atualizar!',
+        //         ]
+        //     );
+        // }
 
     }// end update()
 
