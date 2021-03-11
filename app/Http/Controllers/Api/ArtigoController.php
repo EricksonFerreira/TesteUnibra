@@ -15,6 +15,7 @@ class ArtigoController extends Controller
     
     protected $user;
     protected $artigoSave;
+    
 
     public function __construct(IArtigoSave $artigoSave)
     {
